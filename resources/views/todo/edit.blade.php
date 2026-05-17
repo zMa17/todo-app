@@ -1,110 +1,99 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Todo</title>
-</head>
-<body>
+<x-app-layout>
+    <div class="py-6">
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-xl font-semibold text-[#1a1a1a] mb-6">Edit Todo</h1>
 
-<h1>Edit Todo</h1>
-<a href="{{ route('todo.index') }}">← Kembali</a>
+            @if ($errors->any())
+                <div class="mb-4 px-4 py-3 bg-[#fde0ec] text-[#e03131] rounded-lg text-sm">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-<br><br>
+            <div class="bg-white border border-[#e5e3df] rounded-xl p-6">
+                <form action="{{ route('todo.update', $todo) }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-@if ($errors->any())
-    <ul style="color:red">
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-@endif
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-[#37352f] mb-1">Judul</label>
+                            <input type="text" name="judul" value="{{ old('judul', $todo->judul) }}" required
+                                class="w-full border border-[#c8c4be] rounded-lg px-4 py-2.5 h-11 text-sm">
+                        </div>
 
-<form action="{{ route('todo.update', $todo) }}" method="POST">
-    @csrf
-    @method('PUT')
+                        <div>
+                            <label class="block text-sm font-medium text-[#37352f] mb-1">Deskripsi</label>
+                            <textarea name="deskripsi" rows="3" required
+                                class="w-full border border-[#c8c4be] rounded-lg px-4 py-2.5 text-sm">{{ old('deskripsi', $todo->deskripsi) }}</textarea>
+                        </div>
 
-    <table cellpadding="8">
-        <tr>
-            <td>Judul</td>
-            <td>
-                <input type="text" name="judul" value="{{ old('judul', $todo->judul) }}">
-            </td>
-        </tr>
-        <tr>
-            <td>Deskripsi</td>
-            <td>
-                <textarea name="deskripsi">{{ old('deskripsi', $todo->deskripsi) }}</textarea>
-            </td>
-        </tr>
-        <tr>
-            <td>Tanggal Deadline</td>
-            <td>
-                <input type="date" name="tanggal_deadline" value="{{ old('tanggal_deadline', $todo->tanggal_deadline->format('Y-m-d')) }}">
-            </td>
-        </tr>
-        <tr>
-            <td>Kategori</td>
-            <td>
-                <select name="kategori_id">
-                    <option value="">-- Pilih Kategori --</option>
-                    @foreach ($kategoris as $kategori)
-                        <option value="{{ $kategori->id }}"
-                            {{ old('kategori_id', $todo->kategori_id) == $kategori->id ? 'selected' : '' }}>
-                            {{ $kategori->nama }}
-                        </option>
-                    @endforeach
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Prioritas</td>
-            <td>
-                <label>
-                    <input type="radio" name="prioritas" value="low"
-                        {{ old('prioritas', $todo->prioritas) == 'low' ? 'checked' : '' }}> Low
-                </label>
-                <label>
-                    <input type="radio" name="prioritas" value="medium"
-                        {{ old('prioritas', $todo->prioritas) == 'medium' ? 'checked' : '' }}> Medium
-                </label>
-                <label>
-                    <input type="radio" name="prioritas" value="high"
-                        {{ old('prioritas', $todo->prioritas) == 'high' ? 'checked' : '' }}> High
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td>Tags</td>
-            <td>
-                @php
-                    $selectedTags = old('tags', $todo->tags->pluck('id')->toArray());
-                @endphp
-                @foreach ($tags as $tag)
-                    <label>
-                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
-                            {{ in_array($tag->id, $selectedTags) ? 'checked' : '' }}>
-                        {{ $tag->nama }}
-                    </label><br>
-                @endforeach
-            </td>
-        </tr>
-        <tr>
-            <td>Status</td>
-            <td>
-                <label>
-                    <input type="checkbox" name="is_completed" value="1"
-                        {{ old('is_completed', $todo->is_completed) ? 'checked' : '' }}>
-                    Sudah Selesai
-                </label>
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><button type="submit">Update</button></td>
-        </tr>
-    </table>
+                        <div>
+                            <label class="block text-sm font-medium text-[#37352f] mb-1">Tanggal Deadline</label>
+                            <input type="date" name="tanggal_deadline" value="{{ old('tanggal_deadline', $todo->tanggal_deadline->format('Y-m-d')) }}" required
+                                class="w-full border border-[#c8c4be] rounded-lg px-4 py-2.5 h-11 text-sm">
+                        </div>
 
-</form>
+                        <div>
+                            <label class="block text-sm font-medium text-[#37352f] mb-1">Kategori</label>
+                            <select name="kategori_id" required
+                                class="w-full border border-[#c8c4be] rounded-lg px-4 py-2.5 h-11 text-sm">
+                                <option value="">Pilih Kategori</option>
+                                @foreach ($kategoris as $k)
+                                    <option value="{{ $k->id }}" {{ old('kategori_id', $todo->kategori_id) == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-</body>
-</html>
+                        <div>
+                            <label class="block text-sm font-medium text-[#37352f] mb-1">Prioritas</label>
+                            <div class="flex gap-4 pt-1">
+                                @foreach (['low', 'medium', 'high'] as $p)
+                                    <label class="flex items-center gap-1.5 text-sm text-[#37352f]">
+                                        <input type="radio" name="prioritas" value="{{ $p }}"
+                                            {{ old('prioritas', $todo->prioritas) == $p ? 'checked' : '' }} required>
+                                        {{ ucfirst($p) }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-[#37352f] mb-2">Tags</label>
+                            <div class="flex flex-wrap gap-3">
+                                @php $selectedTags = old('tags', $todo->tags->pluck('id')->toArray()); @endphp
+                                @foreach ($tags as $t)
+                                    <label class="flex items-center gap-1.5 text-sm text-[#37352f]">
+                                        <input type="checkbox" name="tags[]" value="{{ $t->id }}"
+                                            {{ in_array($t->id, $selectedTags) ? 'checked' : '' }}>
+                                        {{ $t->nama }}
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="flex items-center gap-2 text-sm text-[#37352f]">
+                                <input type="checkbox" name="is_completed" value="1"
+                                    {{ old('is_completed', $todo->is_completed) ? 'checked' : '' }}>
+                                Sudah Selesai
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 mt-6">
+                        <button type="submit" class="px-5 py-2.5 bg-[#5645d4] hover:bg-[#4534b3] text-white rounded-lg text-sm font-medium">
+                            Update Todo
+                        </button>
+                        <a href="{{ route('dashboard') }}" class="px-5 py-2.5 text-sm text-[#37352f] border border-[#c8c4be] rounded-lg hover:bg-[#f6f5f4]">
+                            Batal
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

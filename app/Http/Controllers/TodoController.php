@@ -11,7 +11,7 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::all();
+        $todos = Todo::with('kategori', 'tags')->get();
         return view('todo.index', compact('todos'));
     }
 
@@ -34,6 +34,7 @@ class TodoController extends Controller
         ]);
 
         $todo = Todo::create([
+            'user_id'          => auth()->id(),
             'kategori_id'      => $request->kategori_id,
             'judul'            => $request->judul,
             'deskripsi'        => $request->deskripsi,
@@ -44,7 +45,7 @@ class TodoController extends Controller
 
         $todo->tags()->sync($request->tags);
 
-        return redirect()->route('todo.index');
+        return redirect()->route('dashboard');
     }
 
     public function edit(string $id)
@@ -77,13 +78,13 @@ class TodoController extends Controller
 
         $todo->tags()->sync($request->tags);
 
-        return redirect()->route('todo.index');
+        return redirect()->route('dashboard');
     }
 
     public function destroy(string $id)
     {
         $todo = Todo::findOrFail($id);
         $todo->delete();
-        return redirect()->route('todo.index')->with('success', 'Todo berhasil dihapus');
+        return redirect()->route('dashboard')->with('success', 'Todo berhasil dihapus');
     }
 }
