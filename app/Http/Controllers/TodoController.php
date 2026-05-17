@@ -11,15 +11,18 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::all();
-        return view('todo.index', compact('todos'));
+        $todos = Todo::with(['kategori', 'tags'])->get();
+        $kategoris = Kategori::all();
+        $tags = Tag::all();
+        return view('todo.index', compact('todos', 'kategoris', 'tags'));
     }
 
     public function create()
     {
+        $todos = Todo::with(['kategori', 'tags'])->get();
         $kategoris = Kategori::all();
         $tags = Tag::all();
-        return view('todo.create', compact('kategoris', 'tags'));
+        return view('todo.create', compact('todos', 'kategoris', 'tags'));
     }
 
     public function store(Request $request)
@@ -49,10 +52,11 @@ class TodoController extends Controller
 
     public function edit(string $id)
     {
-        $todo = Todo::findOrFail($id);
+        $todo = Todo::with(['kategori', 'tags'])->findOrFail($id);
+        $todos = Todo::with(['kategori', 'tags'])->get();
         $kategoris = Kategori::all();
         $tags = Tag::all();
-        return view('todo.edit', compact('todo', 'kategoris', 'tags'));
+        return view('todo.edit', compact('todo', 'todos', 'kategoris', 'tags'));
     }
 
     public function update(Request $request, Todo $todo)
