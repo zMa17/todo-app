@@ -9,7 +9,7 @@
 
                 <div class="space-y-0">
                     @forelse ($todos as $t)
-                        <div class="group flex items-start gap-3 px-4 py-3 border-b border-[#e5e5e4] hover:bg-gray-50 transition-colors rounded-lg -mx-4 {{ $t->id === $todo->id ? 'bg-amber-50 border-l-2 border-l-amber-400' : '' }}">
+                        <div class="flex items-start gap-3 px-4 py-3 border-b border-[#e5e5e4] hover:bg-gray-50 transition-colors rounded-lg -mx-4 {{ $t->id === $todo->id ? 'bg-amber-50 border-l-2 border-l-amber-400' : '' }}">
                             <div class="pt-0.5">
                                 <form action="{{ route('todo.update', $t) }}" method="POST">
                                     @csrf
@@ -79,7 +79,7 @@
                                 </div>
                             </div>
 
-                            <a href="{{ route('todo.edit', $t) }}" class="text-gray-300 hover:text-gray-500 transition-colors pt-1 opacity-0 group-hover:opacity-100">
+                            <a href="{{ route('todo.edit', $t) }}" class="text-gray-300 hover:text-gray-500 transition-colors pt-1">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                 </svg>

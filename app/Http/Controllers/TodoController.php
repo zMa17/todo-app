@@ -9,12 +9,27 @@ use App\Models\Tag;
 
 class TodoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $todos = Todo::with(['kategori', 'tags'])->get();
+        $query = Todo::with(['kategori', 'tags']);
+
+        if ($request->filter === 'today') {
+            $query->whereDate('tanggal_deadline', today());
+        } elseif ($request->filter === 'completed') {
+            $query->where('is_completed', true);
+        } elseif ($request->kategori) {
+            $query->where('kategori_id', $request->kategori);
+        } elseif ($request->tag) {
+            $query->whereHas('tags', fn($q) => $q->where('id', $request->tag));
+        }
+
+        $todos = $query->get();
+        $activeTodos = $todos->where('is_completed', false);
+        $completedTodos = $todos->where('is_completed', true);
         $kategoris = Kategori::all();
         $tags = Tag::all();
-        return view('todo.index', compact('todos', 'kategoris', 'tags'));
+
+        return view('todo.index', compact('todos', 'activeTodos', 'completedTodos', 'kategoris', 'tags'));
     }
 
     public function create()

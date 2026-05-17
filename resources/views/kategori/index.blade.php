@@ -2,12 +2,12 @@
     <div class="max-w-3xl mx-auto px-8 py-8">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Daftar Kategori</h1>
-            <a href="{{ route('kategori.create') }}" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-amber-400 hover:bg-amber-500 rounded-lg transition-colors">
+            <button onclick="openKategoriModal()" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-amber-400 hover:bg-amber-500 rounded-lg transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                 </svg>
                 Tambah
-            </a>
+            </button>
         </div>
 
         <div class="bg-white border border-[#e5e5e4] rounded-lg overflow-hidden">
