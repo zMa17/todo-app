@@ -25,10 +25,14 @@ class KategoriController extends Controller
             'warna' => 'required',
         ]);
 
-        Kategori::create([
+        $kategori = Kategori::create([
             'nama' => $request->nama,
             'warna' => $request->warna,
         ]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json($kategori);
+        }
 
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
     }

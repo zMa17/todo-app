@@ -74,9 +74,9 @@
                                     :checked="selectedTags.includes({{ $tag->id }})"
                                     class="hidden">
                                 <span @click="selectedTags.includes({{ $tag->id }}) ? selectedTags = selectedTags.filter(t => t !== {{ $tag->id }}) : selectedTags.push({{ $tag->id }})"
-                                    :class="selectedTags.includes({{ $tag->id }}) ? 'bg-amber-400 text-white' : ''"
-                                    class="px-3 py-1 rounded-lg text-sm cursor-pointer"
-                                    style="background:{{ $tag->warna }}20;color:{{ $tag->warna }}">
+                                    :class="selectedTags.includes({{ $tag->id }}) ? 'bg-amber-400 text-white' : 'bg-gray-100 text-gray-600'"
+                                    :style="selectedTags.includes({{ $tag->id }}) ? '' : 'background:{{ $tag->warna }}20;color:{{ $tag->warna }}'"
+                                    class="px-3 py-1 rounded-lg text-sm cursor-pointer">
                                     {{ $tag->nama }}
                                 </span>
                             @endforeach

@@ -25,10 +25,14 @@ class TagController extends Controller
             'nama' => 'required',
         ]);
 
-        Tag::create([
+        $tag = Tag::create([
             'warna' => $request->warna,
             'nama' => $request->nama,
         ]);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json($tag);
+        }
 
         return redirect()->route('tag.index')->with('success', 'Tag berhasil dibuat.');
     }

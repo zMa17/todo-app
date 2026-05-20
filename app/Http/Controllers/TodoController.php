@@ -84,24 +84,23 @@ class TodoController extends Controller
     public function update(Request $request, Todo $todo)
     {
         $request->validate([
-            'judul'            => 'required',
-            'deskripsi'        => 'required',
-            'tanggal_deadline' => 'required|date',
-            'prioritas'        => 'required',
-            'kategori_id'      => 'required',
-            'tags'             => 'required|array',
+            'judul'            => 'sometimes|required',
+            'deskripsi'        => 'sometimes|required',
+            'tanggal_deadline' => 'sometimes|required|date',
+            'prioritas'        => 'sometimes|required',
+            'kategori_id'      => 'sometimes|required',
+            'tags'             => 'sometimes|required|array',
         ]);
 
-        $todo->update([
-            'kategori_id'      => $request->kategori_id,
-            'judul'            => $request->judul,
-            'deskripsi'        => $request->deskripsi,
-            'tanggal_deadline' => $request->tanggal_deadline,
-            'prioritas'        => $request->prioritas,
-            'is_completed'     => $request->is_completed ?? false,
-        ]);
+        $data = $request->only(['kategori_id', 'judul', 'deskripsi', 'tanggal_deadline', 'prioritas']);
+        if ($request->has('is_completed')) {
+            $data['is_completed'] = $request->is_completed;
+        }
+        $todo->update($data);
 
-        $todo->tags()->sync($request->tags);
+        if ($request->has('tags')) {
+            $todo->tags()->sync($request->tags);
+        }
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json(['success' => true]);

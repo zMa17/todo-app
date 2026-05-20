@@ -5,7 +5,7 @@
             <span class="flex-1">Tambah Tag</span>
             <button onclick="closeTagModal()" class="text-gray-400" style="background:none;border:none">&times;</button>
         </div>
-        <form action="{{ route('tag.store') }}" method="POST">
+        <form action="{{ route('tag.store') }}" method="POST" onsubmit="return submitTagForm(event)">
             @csrf
             <div class="mb-3">
                 <input type="text" name="nama" placeholder="Nama" class="w-full px-3 py-2 border rounded-lg" required>

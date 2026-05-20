@@ -37,5 +37,22 @@
                 history.pushState({}, '', url);
             });
         };
+
+        window.toggleTodo = function(todoId, isCompleted) {
+            fetch('/todo/' + todoId, {
+                method: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    is_completed: isCompleted ? 0 : 1
+                })
+            })
+            .then(r => r.json())
+            .then(() => { loadTodos(window.location.href) });
+        };
     </script>
 </x-app-layout>

@@ -1,21 +1,7 @@
 @foreach ($activeTodos as $todo)
     <div class="flex px-4 py-3 border-b" x-data="{ loading: false }">
         <div class="mr-3">
-            <span @click="
-                loading = true;
-                fetch('{{ route('todo.update', $todo) }}', {
-                    method: 'PUT',
-                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        is_completed: 1,
-                        judul: @json($todo->judul),
-                        deskripsi: @json($todo->deskripsi),
-                        tanggal_deadline: '{{ $todo->tanggal_deadline->format('Y-m-d') }}',
-                        prioritas: '{{ $todo->prioritas }}',
-                        kategori_id: {{ $todo->kategori_id }},
-                        tags: {{ json_encode($todo->tags->pluck('id')->toArray()) }}
-                    })
-                }).then(r => r.json()).then(() => { loadTodos(window.location.href) })">
+            <span @click="loading = true; toggleTodo({{ $todo->id }}, {{ $todo->is_completed ? 'true' : 'false' }})">
                 <div class="w-5 h-5 border-2 border-gray-300 rounded" style="cursor:pointer"></div>
             </span>
         </div>
@@ -54,21 +40,7 @@
     @foreach ($completedTodos as $todo)
         <div class="flex px-4 py-3 border-b" x-data="{ loading: false }">
             <div class="mr-3">
-                <span @click="
-                    loading = true;
-                    fetch('{{ route('todo.update', $todo) }}', {
-                        method: 'PUT',
-                        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            is_completed: 0,
-                            judul: @json($todo->judul),
-                            deskripsi: @json($todo->deskripsi),
-                            tanggal_deadline: '{{ $todo->tanggal_deadline->format('Y-m-d') }}',
-                            prioritas: '{{ $todo->prioritas }}',
-                            kategori_id: {{ $todo->kategori_id }},
-                            tags: {{ json_encode($todo->tags->pluck('id')->toArray()) }}
-                        })
-                    }).then(r => r.json()).then(() => { loadTodos(window.location.href) })">
+                <span @click="loading = true; toggleTodo({{ $todo->id }}, {{ $todo->is_completed ? 'true' : 'false' }})">
                     <div class="w-5 h-5 border-2 bg-amber-400 border-amber-400 rounded" style="display:flex;align-items:center;justify-content:center;cursor:pointer">&#10003;</div>
                 </span>
             </div>

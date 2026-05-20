@@ -68,6 +68,70 @@
         function closeKategoriModal() { document.getElementById('kategori-modal').classList.add('hidden') }
         function openTagModal() { document.getElementById('tag-modal').classList.remove('hidden') }
         function closeTagModal() { document.getElementById('tag-modal').classList.add('hidden') }
+
+        function submitKategoriForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const selects = document.querySelectorAll('select[name="kategori_id"]');
+                selects.forEach(select => {
+                    const opt = document.createElement('option');
+                    opt.value = data.id; opt.textContent = data.nama;
+                    select.appendChild(opt); select.value = data.id;
+                });
+                const sidebar = document.querySelector('#sidebar-menu .mb-5:nth-of-type(2)');
+                if (sidebar) {
+                    const btn = sidebar.querySelector('button');
+                    const link = document.createElement('a');
+                    link.href = '/todo?kategori=' + data.id;
+                    link.className = 'flex px-3 py-2 rounded-lg';
+                    link.innerHTML = '<span class="w-2.5 h-2.5 inline-block mr-2" style="background:' + data.warna + ';border-radius:50%"></span>' + data.nama;
+                    link.onclick = function() { return window.loadTodos ? (loadTodos(this.href), false) : true; };
+                    sidebar.insertBefore(link, btn);
+                }
+                closeKategoriModal();
+                form.reset();
+            })
+            .catch(() => alert('Gagal menambah kategori'));
+            return false;
+        }
+
+        function submitTagForm(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const sidebar = document.querySelector('#sidebar-menu .mb-5:nth-of-type(3) .px-2');
+                if (sidebar) {
+                    const btn = sidebar.querySelector('button');
+                    const link = document.createElement('a');
+                    link.href = '/todo?tag=' + data.id;
+                    link.className = 'inline-block px-2 py-0.5 mr-1 mb-1 text-xs rounded-lg';
+                    link.style.background = data.warna + '20';
+                    link.style.color = data.warna;
+                    link.textContent = data.nama;
+                    link.onclick = function() { return window.loadTodos ? (loadTodos(this.href), false) : true; };
+                    sidebar.insertBefore(link, btn);
+                }
+                closeTagModal();
+                form.reset();
+            })
+            .catch(() => alert('Gagal menambah tag'));
+            return false;
+        }
     </script>
 </body>
 </html>
