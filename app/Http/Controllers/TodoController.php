@@ -29,6 +29,13 @@ class TodoController extends Controller
         $kategoris = Kategori::all();
         $tags = Tag::all();
 
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'html' => view('todo._list', compact('activeTodos', 'completedTodos', 'todos', 'kategoris', 'tags'))->render(),
+                'count' => $todos->count(),
+            ]);
+        }
+
         return view('todo.index', compact('todos', 'activeTodos', 'completedTodos', 'kategoris', 'tags'));
     }
 
@@ -95,6 +102,10 @@ class TodoController extends Controller
         ]);
 
         $todo->tags()->sync($request->tags);
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => true]);
+        }
 
         return redirect()->route('todo.index');
     }

@@ -14,47 +14,44 @@
             <div class="px-4 py-3 border-b">
                 <span class="text-gray-800">Menu</span>
             </div>
-            <div class="px-4 pt-2">
-                <input type="text" placeholder="Search" class="w-full px-3 py-1.5 bg-gray-100 border-0">
-            </div>
-            <div class="flex-1 px-3 pt-4">
+            <div class="flex-1 px-3 pt-4" id="sidebar-menu">
                 <div class="mb-5">
                     <p class="text-gray-400 px-2 mb-1">Tasks</p>
-                    <a href="{{ route('todo.index') }}" class="flex px-3 py-2 {{ !request('filter') && !request('kategori') && !request('tag') ? 'bg-gray-100' : '' }}">Upcoming</a>
-                    <a href="{{ route('todo.index', ['filter' => 'today']) }}" class="flex px-3 py-2 {{ request('filter') === 'today' ? 'bg-gray-100' : '' }}">Today</a>
-                    <a href="{{ route('todo.index', ['filter' => 'completed']) }}" class="flex px-3 py-2 {{ request('filter') === 'completed' ? 'bg-gray-100' : '' }}">Completed</a>
+                    <a href="{{ route('todo.index') }}" onclick="return window.loadTodos ? (loadTodos(this.href), false) : true" class="flex px-3 py-2 rounded-lg {{ !request('filter') && !request('kategori') && !request('tag') ? 'bg-gray-100' : '' }}">Upcoming</a>
+                    <a href="{{ route('todo.index', ['filter' => 'today']) }}" onclick="return window.loadTodos ? (loadTodos(this.href), false) : true" class="flex px-3 py-2 rounded-lg {{ request('filter') === 'today' ? 'bg-gray-100' : '' }}">Today</a>
+                    <a href="{{ route('todo.index', ['filter' => 'completed']) }}" onclick="return window.loadTodos ? (loadTodos(this.href), false) : true" class="flex px-3 py-2 rounded-lg {{ request('filter') === 'completed' ? 'bg-gray-100' : '' }}">Completed</a>
                 </div>
                 <div class="mb-5">
                     <p class="text-gray-400 px-2 mb-1">Kategori</p>
                     @foreach ($kategoris as $kategori)
-                        <a href="{{ route('todo.index', ['kategori' => $kategori->id]) }}" class="flex px-3 py-2 {{ request('kategori') == $kategori->id ? 'bg-gray-100' : '' }}">
-                            <span class="w-2.5 h-2.5 inline-block mr-2" style="background:{{ $kategori->warna }};border-radius:50%"></span>
-                            {{ $kategori->nama }}
-                        </a>
+                        @if ($kategori->todos_count > 0)
+                            <a href="{{ route('todo.index', ['kategori' => $kategori->id]) }}" onclick="return window.loadTodos ? (loadTodos(this.href), false) : true" class="flex px-3 py-2 rounded-lg {{ request('kategori') == $kategori->id ? 'bg-gray-100' : '' }}">
+                                <span class="w-2.5 h-2.5 inline-block mr-2" style="background:{{ $kategori->warna }};border-radius:50%"></span>
+                                {{ $kategori->nama }}
+                            </a>
+                        @endif
                     @endforeach
-                    <button onclick="openKategoriModal()" class="flex px-3 py-2 text-gray-400 w-full">+ Tambah Kategori Baru</button>
+                    <button onclick="openKategoriModal()" class="flex px-3 py-2 text-gray-400 w-full rounded-lg">+ Tambah Kategori Baru</button>
                 </div>
                 <div class="mb-5">
                     <p class="text-gray-400 px-2 mb-1">Tags</p>
                     <div class="px-2">
                         @foreach ($tags as $tag)
-                            <a href="{{ route('todo.index', ['tag' => $tag->id]) }}" class="inline-block px-2 py-0.5 mr-1 mb-1 text-xs" style="background:{{ $tag->warna }}20;color:{{ $tag->warna }}">
+                            <a href="{{ route('todo.index', ['tag' => $tag->id]) }}" onclick="return window.loadTodos ? (loadTodos(this.href), false) : true" class="inline-block px-2 py-0.5 mr-1 mb-1 text-xs rounded-lg" style="background:{{ $tag->warna }}20;color:{{ $tag->warna }}">
                                 {{ $tag->nama }}
                             </a>
                         @endforeach
-                        <button onclick="openTagModal()" class="inline-block px-2 py-0.5 text-xs text-gray-400 border border-dashed">+ Add Tag</button>
+                        <button onclick="openTagModal()" class="inline-block px-2 py-0.5 text-xs text-gray-400 border border-dashed rounded-lg">+ Add Tag</button>
                     </div>
                 </div>
-                <div class="mb-5">
-                    <p class="text-gray-400 px-2 mb-1">Settings</p>
-                    <a href="{{ route('kategori.index') }}" class="flex px-3 py-2">Kategori</a>
-                    <a href="{{ route('tag.index') }}" class="flex px-3 py-2">Tag</a>
-                </div>
             </div>
-            <div class="px-3 py-3 border-t">
+            <div class="px-3 py-2 border-t">
+                <a href="{{ route('settings.index') }}" class="flex px-3 py-2 rounded-lg text-gray-600">Settings</a>
+            </div>
+            <div class="px-3 py-2 border-t">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="flex px-3 py-2 text-gray-500 w-full">Log out</button>
+                    <button type="submit" class="flex px-3 py-2 text-gray-500 w-full rounded-lg">Log out</button>
                 </form>
             </div>
         </aside>
